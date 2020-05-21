@@ -18,5 +18,12 @@ client.on("message", async message => {
             let user =  await client.users.fetch("292885865074655242");
             let chris = message.guild.member(user);
             chris.voice.kick();
+
+        } else if(message.content == "cya ismail" && message.author.bot) {
+
+            let user =  await client.users.fetch("132331615056691200");
+            let ismail = message.guild.member(user);
+            ismail.voice.kick();
+
         }
 });
