@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
+const config = require('./config.json')
 const client = new Discord.Client();
-const webhookClient = new Discord.WebhookClient("712808667321335879", "XOnu_VtbfHGqM4UFvH9IbMBkfVguiBMgux1JyhBkIqjDDbqvOueTThnlhnyv4rPCmuST");
+const webhookClient = new Discord.WebhookClient(config.webhook_id, config.webhook_token);
 
 client.once('ready', () => {
     console.log('ready');
@@ -8,7 +9,7 @@ client.once('ready', () => {
 
 
 
-client.login('NzEyNzg4MzYyOTM4ODEwMzc4.XsW2jQ.Vk7mG_GB0l0Jb4ZHpIWiZid3ehg');
+client.login(config.bot_token);
 
 
 client.on("message", async message => {
