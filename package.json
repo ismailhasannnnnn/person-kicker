@@ -1,0 +1,11 @@
+{
+  "name": "kickchris",
+  "version": "1.0.0",
+  "description": "a bot to kick chris cause he's annoying",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bismail and Mykel",
+  "license": "ISC"
+}
