@@ -25,5 +25,17 @@ client.on("message", async message => {
             let ismail = message.guild.member(user);
             ismail.voice.kick();
 
+        } else if(message.content == "cya michael" && message.author.bot) {
+
+            let user =  await client.users.fetch("191754197203550208");
+            let michael = message.guild.member(user);
+            michael.voice.kick();
+
+        } else if(message.content == "cya marcus" && message.author.bot) {
+
+            let user =  await client.users.fetch("216326109862690816");
+            let marcus = message.guild.member(user);
+            marcus.voice.kick();
+
         }
 });
