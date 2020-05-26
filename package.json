@@ -4,8 +4,11 @@
   "description": "a bot to kick chris cause he's annoying",
   "main": "index.js",
   "scripts": {
-    "start" : "node index.js"
+    "start": "node index.js"
   },
   "author": "Bismail and Mykel",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.2.0"
+  }
 }
