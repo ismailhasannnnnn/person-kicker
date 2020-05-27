@@ -7,6 +7,30 @@ client.once('ready', () => {
     console.log('ready');
 });
 
+client.guildCreate("guildCreate",function(guild){
+    const fs = require('fs') //allows reading and writing to json file
+
+    //check if server has data
+    //let serverID = client.guilds.id;
+    
+    fs.readFile('./data.json', (err, jsonString) => {
+        if (err) {
+            console.log("File read failed:", err)
+            return
+        }
+        try {
+            const guildInfo = JSON.parse(jsonString)
+    } catch(err) {
+            console.log('Error parsing JSON string:', err)
+        } 
+    })
+
+    //create webhook
+    //send webhook to server general chat
+    //store webhook in json 
+    //nice
+});
+
 
 
 client.login(config.bot_token);
