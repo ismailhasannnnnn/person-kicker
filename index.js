@@ -7,19 +7,12 @@ const webhookClient = new Discord.WebhookClient(config.webhook_id, config.webhoo
 
 client.once('ready', () => {
     console.log('ready');
-    //check if server has data
-    //create webhook
-    //store webhook in json
-    //nice
 });
 
-
+//Creates data for server upon bot joining server
 client.on("guildCreate", function (guild) {
 
-    //check if server has data
-    //let serverID = guild.id;
-
-    if (!("Guilds" in data)) {
+   if(!("Guilds" in data)) { 
         var gData = {
             Guilds: {}
         }
@@ -36,13 +29,6 @@ client.on("guildCreate", function (guild) {
 
     data.Guilds[guildName] = newJson;
     writeToJson(data);
-
-
-
-    //create webhook
-    //send webhook to server general chat
-    //store webhook in json 
-    //nice */
 });
 
 
@@ -118,6 +104,11 @@ client.on("message", async message => {
             if (serverData["webhookChannelId"] !== channelId) {
                 serverData["webhookChannelId"] = channelId;
                 message.channel.send("Webhook channel updated successfully!");
+
+                message.channel.createWebhook("Captain Hook", 'https://i.imgur.com/p2qNFag.png')
+                .then(webhook => webhook.edit("Captain Hook", 'https://i.imgur.com/p2qNFag.png'))
+
+
             } else {
                 message.channel.send("This is the same webhook channel!");
             }
