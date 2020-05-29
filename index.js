@@ -103,10 +103,9 @@ client.on("message", async message => {
             if (serverData["webhookChannelId"] !== channelId) {
                 serverData["webhookChannelId"] = channelId;
                 message.channel.send("Webhook channel updated successfully!");
-                //creates webhook
-                message.channel.createWebhook("Captain Hook", 'https://i.imgur.com/p2qNFag.png')
-                .then(webhook => webhook.edit("Captain Hook", 'https://i.imgur.com/p2qNFag.png'))
-
+                
+                let webhook = await client.fetchWebhook(serverData["webhookId"], serverData["webhookToken"]);
+                webhook.edit({channel : serverData["webhookChannelId"]});
 
             } else {
                 message.channel.send("This is the same webhook channel!");
