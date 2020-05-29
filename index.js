@@ -11,7 +11,7 @@ client.once('ready', () => {
 
 //Creates data for server upon bot joining
 client.on("guildCreate", function (guild) {
-   if(!("Guilds" in data)) { 
+    if (!("Guilds" in data)) {
         var gData = {
             Guilds: {}
         }
@@ -42,33 +42,33 @@ client.on("message", async message => {
 
 
     //add command 
-    try{
+    try {
 
         if (message.content.startsWith('$add')) {
             let userId = message.mentions.members.first().id;
             let userName = message.mentions.members.first().displayName;
             let userData = data.Guilds[guildname].UserData;
-    
+
             if (userName in userData) {
-    
+
                 message.channel.send("<@" + userId + "> is already in the hit list!");
-    
+
             } else {
-    
+
                 data.Guilds[guildname].UserData[userName] = userId;
                 writeToJson(data);
-    
+
                 message.channel.send("<@" + userId + "> has successfully been added to the hit list!");
-    
+
             }
-    
+
             // add user id to json
         }
 
-    }catch(err){
+    } catch (err) {
         console.log("add failed");
     }
-    
+
 
 
     //remove command
@@ -78,56 +78,56 @@ client.on("message", async message => {
             let userId = message.mentions.members.first().id;
             let userName = message.mentions.members.first().displayName;
             let userData = data.Guilds[guildname].UserData;
-    
+
             if (userName in userData) {
-    
+
                 delete data.Guilds[guildname].UserData[userName];
                 writeToJson(data);
                 message.channel.send("<@" + userId + "> has been removed from the hit list. :(");
-    
+
             } else {
-    
+
                 message.channel.send("<@" + userId + "> isn't even on the hit list!");
-    
+
             }
-    
-    
+
+
             // remove user id from json
         }
 
-    }catch(err){
+    } catch (err) {
         console.log("remove failed");
     }
 
 
 
     //dc command
-    try{
+    try {
 
         if (message.content.startsWith('$dc')) {
             let userId = message.mentions.members.first().id;
             let userName = message.mentions.members.first().displayName;
             let userData = data.Guilds[guildname].UserData;
-    
+
             if (userName in userData) {
-    
+
                 message.channel.send("cya later <@" + userId + ">!");
-                var member =  message.mentions.members.first();
+                var member = message.mentions.members.first();
                 member.voice.kick();
-    
+
             } else {
 
                 message.channel.send("<@" + userId + "> is not on the hit list!");
-    
+
             }
-    
+
             // add user id to json
         }
 
-    }catch(err){
+    } catch (err) {
         console.log("add failed");
     }
-    
+
 
 
     //setchannel command
@@ -142,7 +142,7 @@ client.on("message", async message => {
                 message.channel.send("Webhook channel updated successfully!");
 
                 let webhook = await client.fetchWebhook(serverData["webhookId"], serverData["webhookToken"]);
-                webhook.edit({channel : serverData["webhookChannelId"]});
+                webhook.edit({ channel: serverData["webhookChannelId"] });
 
             } else {
                 message.channel.send("This is the same webhook channel!");
@@ -150,21 +150,21 @@ client.on("message", async message => {
         } else {
             serverData.webhookChannelId = channelId;
             let newWebhook = message.channel.createWebhook("Captain Hook", 'https://i.imgur.com/p2qNFag.png')
-            .then(webhook => webhook.edit("Captain Hook", 'https://i.imgur.com/p2qNFag.png', 'channelId'))
-            .then(wb => wb.send("I am alive!"))
-
-            serverData['webhookChannelId'] = channelId;
+                .then(webhook => webhook.edit("Captain Hook", 'https://i.imgur.com/p2qNFag.png', 'channelId'))
+                .then(wb => wb.send("I am alive!"))
         }
 
         writeToJson(data);
     }
 
-    if(message.content == "I am alive!" && message.author.bot){
+    if (message.content == "I am alive!" && message.author.bot) {
         let serverData = data.Guilds[guildname].ServerData;
         let webhook = await message.fetchWebhook(message.webhookID);
-        console.log(webhook.token);
-
+        serverData['webhookToken'] = webhook.token;
+        serverData['webhookId'] = webhook.id;
+        writeToJson(data);
     }
+
 });
 
 //writes to data.json 
@@ -173,6 +173,7 @@ function writeToJson(data) {
         if (err) throw err;
     });
 }
+
 
 
 
