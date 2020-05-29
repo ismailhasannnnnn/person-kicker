@@ -12,7 +12,9 @@ client.once('ready', () => {
     //nice
 });
 
-client.guildCreate("guildCreate",function(guild){
+console.log(data.Guild.ServerData.ServerID);
+
+client.on("guildCreate",function(guild){
     const fs = require('fs') //allows reading and writing to json file
 
     //check if server has data
@@ -29,6 +31,7 @@ client.guildCreate("guildCreate",function(guild){
             console.log('Error parsing JSON string:', err)
         } 
     })
+        console.log(data.Guild.ServerData.ServerID);
 
     //create webhook
     //send webhook to server general chat
