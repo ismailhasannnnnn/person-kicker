@@ -37,7 +37,7 @@ client.login(config.bot_token);
 client.on("message", async message => {
     console.log("working");
     if (message.content.startsWith('$add')) {
-        let user = message.mentions.members.first().id;
+        let userId = message.mentions.members.first().id;
         // add user id to json
     }
 
@@ -64,13 +64,15 @@ client.on("message", async message => {
             message.channel.send("Webhook set to send messages to this channel!");
         }
 
-        fs.writeFile("./data.json", JSON.stringify(data, null, 4), function (err) {
-            if (err) throw err;
-        });
+        writeToJson(data);
     }
 });
 
-
+function writeToJson(data){
+    fs.writeFile("./data.json", JSON.stringify(data, null, 4), function (err) {
+        if (err) throw err;
+    });
+}
 
 
 
