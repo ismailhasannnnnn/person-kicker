@@ -11,7 +11,6 @@ client.once('ready', () => {
 
 //Creates data for server upon bot joining server
 client.on("guildCreate", function (guild) {
-
    if(!("Guilds" in data)) { 
         var gData = {
             Guilds: {}
@@ -104,7 +103,7 @@ client.on("message", async message => {
             if (serverData["webhookChannelId"] !== channelId) {
                 serverData["webhookChannelId"] = channelId;
                 message.channel.send("Webhook channel updated successfully!");
-
+                //creates webhook
                 message.channel.createWebhook("Captain Hook", 'https://i.imgur.com/p2qNFag.png')
                 .then(webhook => webhook.edit("Captain Hook", 'https://i.imgur.com/p2qNFag.png'))
 
