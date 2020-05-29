@@ -140,7 +140,7 @@ client.on("message", async message => {
             if (serverData["webhookChannelId"] !== channelId) {
                 serverData["webhookChannelId"] = channelId;
                 message.channel.send("Webhook channel updated successfully!");
-                
+
                 let webhook = await client.fetchWebhook(serverData["webhookId"], serverData["webhookToken"]);
                 webhook.edit({channel : serverData["webhookChannelId"]});
 
@@ -149,13 +149,21 @@ client.on("message", async message => {
             }
         } else {
             serverData.webhookChannelId = channelId;
-            message.channel.createWebhook("Captain Hook", 'https://i.imgur.com/p2qNFag.png')
+            let newWebhook = message.channel.createWebhook("Captain Hook", 'https://i.imgur.com/p2qNFag.png')
             .then(webhook => webhook.edit("Captain Hook", 'https://i.imgur.com/p2qNFag.png', 'channelId'))
-            serverData['webhookChannelId'] = channelId; 
-            message.channel.send("Webhook set to send messages to this channel!");
+            .then(wb => wb.send("I am alive!"))
+
+            serverData['webhookChannelId'] = channelId;
         }
 
         writeToJson(data);
+    }
+
+    if(message.content == "I am alive!" && message.author.bot){
+        let serverData = data.Guilds[guildname].ServerData;
+        let webhook = await message.fetchWebhook(message.webhookID);
+        console.log(webhook.token);
+
     }
 });
 
