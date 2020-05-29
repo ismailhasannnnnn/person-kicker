@@ -103,16 +103,14 @@ client.on("message", async message => {
             if (serverData["webhookChannelId"] !== channelId) {
                 serverData["webhookChannelId"] = channelId;
                 message.channel.send("Webhook channel updated successfully!");
-                //creates webhook
-                message.channel.createWebhook("Captain Hook", 'https://i.imgur.com/p2qNFag.png')
-                .then(webhook => webhook.edit("Captain Hook", 'https://i.imgur.com/p2qNFag.png'))
-
-
             } else {
                 message.channel.send("This is the same webhook channel!");
             }
         } else {
             serverData.webhookChannelId = channelId;
+            message.channel.createWebhook("Captain Hook", 'https://i.imgur.com/p2qNFag.png')
+            .then(webhook => webhook.edit("Captain Hook", 'https://i.imgur.com/p2qNFag.png', 'channelId'))
+            serverData['webhookChannelId'] = channelId;
             message.channel.send("Webhook set to send messages to this channel!");
         }
 
