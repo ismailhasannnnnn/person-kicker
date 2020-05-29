@@ -19,23 +19,22 @@ client.on("guildCreate", function (guild) {
     //check if server has data
     //let serverID = guild.id;
 
-   if(!("Guilds" in data)) { 
+    if(!("Guilds" in data)){
         var gData = {
-            Guilds : [] 
-            
-        }; 
-   }
+            Guilds : {}
+        }
+        writeToJson(gData);
+    }
+
         let guildName = guild.name.replace(/\s+/g, ''); //removes whitespace from string
         let newJson = {
-            [guildName]: {
                 "ServerData": {
                     "serverId": guild.id
                 },
                 "UserData": []
-            }
         }
     
-        data.Guilds.push(newJson);
+        data.Guilds[guildName] = newJson;
         writeToJson(data);
 
     //create webhook
@@ -50,9 +49,17 @@ client.login(config.bot_token);
 
 
 client.on("message", async message => {
-    console.log("working");
+    
+    let guildname = message.guild.name.replace(/\s+/g, '');
+
     if (message.content.startsWith('$add')) {
-        let userId = message.mentions.members.first().id;
+            let userId = message.mentions.members.first().id;
+            let userName = message.mentions.members.first().displayName;
+
+            data.Guilds[guildname].UserData[userName] = userId;
+            writeToJson(data);
+
+        
         // add user id to json
     }
 
@@ -64,8 +71,7 @@ client.on("message", async message => {
     if (message.content == "$setchannel") {
 
         let channelId = message.channel.id;
-        let guildname = message.guild.name.replace(/\s+/g, '');
-        let serverData = data.Guilds[0][guildname].ServerData;
+        let serverData = data.Guilds[guildname].ServerData;
 
         if ("webhookChannelId" in serverData) {
             if (serverData["webhookChannelId"] !== channelId) {
