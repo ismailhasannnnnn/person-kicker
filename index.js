@@ -12,68 +12,39 @@ client.once('ready', () => {
     //nice
 });
 
-console.log(data.Guild.ServerData.ServerID);
-
 client.on("guildCreate", function (guild) {
     const fs = require('fs') //allows reading and writing to json file
 
     //check if server has data
     //let serverID = guild.id;
-    fs.readFile('./data.json', (err, jsonString) => {
-        if (err) {
-            console.log("File read failed:", err)
-            return
-        }
 
-        try {
-
-            let guildName = guild.name.replace(/\s+/g, ''); //removes whitespace from string
-            const dataJson = JSON.parse(jsonString);
-
-            if (data.Guilds.length == 0) {
-                
-                let guildName = guild.name.replace(/\s+/g, ''); //removes whitespace from string
-                let newJson = { [guildName]: { "ServerData": {"serverId" : [guild.id]}, "UserData": [] } };
-                dataJson.Guilds.push(newJson);
-                let jsonStr = JSON.stringify(dataJson);
-
-                fs.writeFile("./data.json", jsonStr, function (err) {
-                    if (err) throw err;
-                    console.log('Saved!');
-                });
+   if(!("Guilds" in data)) { 
+        var gData = {
+            Guilds : [] 
+            
+        }; 
+   }
+        let guildName = guild.name.replace(/\s+/g, ''); //removes whitespace from string
+        let newJson = {
+            [guildName]: {
+                "ServerData": {
+                    "serverId": guild.id
+                },
+                "UserData": []
             }
-
-            // for (let i = 0; i < data.Guilds.length; i++) {
-            //     console.log("running setup")
-            //     if (data.Guilds[i].) {
-            //         break;
-            //     } else if (i == data.Guilds.length - 1 && data.Guilds[i].ServerData.serverId != guild.id) {
-            //         const dataJson = JSON.parse(jsonString)
-            //         let newJson = { [guildName]: { "ServerData": {"serverId" : [guild.id]}, "UserData": [] } };
-            //         dataJson.Guilds.push(newJson);
-            //         let jsonStr = JSON.stringify(dataJson);
-
-            //         fs.writeFile("./data.json", jsonStr, function (err) {
-            //             if (err) throw err;
-            //             console.log('Saved!');
-            //         });
-            //     }
-            // }
-            
-            
-            
-        } catch (err) {
-            console.log('Error parsing JSON string:', err)
         }
-    })
-
-
+    
+        data.Guilds.push(newJson);
+        fs.writeFile("./data.json", JSON.stringify(data, null, 4), function (err) {
+            if (err) throw err;
+            console.log('Saved!');
+        });
 
     //create webhook
     //send webhook to server general chat
     //store webhook in json 
-    //nice
-});
+    //nice */
+}); 
 
 
 
@@ -105,4 +76,4 @@ if(message.content == "later chris" && message.author.bot) {
             chris.voice.kick();
 
         }
-*/
+    */ 
