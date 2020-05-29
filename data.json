@@ -1,0 +1,14 @@
+{
+    "Guilds": [
+        {
+            "BotTesting": {
+                "ServerData": {
+                    "serverId": "hi",
+                    "hi": "hi",
+                    "webhookChannelId": "715753937168367676"
+                },
+                "UserData": []
+            }
+        }
+    ]
+}
