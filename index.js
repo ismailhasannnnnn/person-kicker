@@ -19,29 +19,31 @@ client.on("guildCreate", function (guild) {
     //check if server has data
     //let serverID = guild.id;
 
-    if(!("Guilds" in data)){
+    if (!("Guilds" in data)) {
         var gData = {
-            Guilds : {}
+            Guilds: {}
         }
         writeToJson(gData);
     }
 
-        let guildName = guild.name.replace(/\s+/g, ''); //removes whitespace from string
-        let newJson = {
-                "ServerData": {
-                    "serverId": guild.id
-                },
-                "UserData": []
-        }
-    
-        data.Guilds[guildName] = newJson;
-        writeToJson(data);
+    let guildName = guild.name.replace(/\s+/g, ''); //removes whitespace from string
+    let newJson = {
+        "ServerData": {
+            "serverId": guild.id
+        },
+        "UserData": {}
+    }
+
+    data.Guilds[guildName] = newJson;
+    writeToJson(data);
+
+
 
     //create webhook
     //send webhook to server general chat
     //store webhook in json 
     //nice */
-}); 
+});
 
 
 
@@ -49,23 +51,62 @@ client.login(config.bot_token);
 
 
 client.on("message", async message => {
-    
+
     let guildname = message.guild.name.replace(/\s+/g, '');
 
-    if (message.content.startsWith('$add')) {
+    try{
+
+        if (message.content.startsWith('$add')) {
             let userId = message.mentions.members.first().id;
             let userName = message.mentions.members.first().displayName;
+            let userData = data.Guilds[guildname].UserData;
+    
+            if (userName in userData) {
+    
+                message.channel.send("<@" + userId + "> is already in the kicking list!");
+    
+            } else {
+    
+                data.Guilds[guildname].UserData[userName] = userId;
+                writeToJson(data);
+    
+                message.channel.send("<@" + userId + "> has successfully been added to the kicking list!");
+    
+            }
+    
+            // add user id to json
+        }
 
-            data.Guilds[guildname].UserData[userName] = userId;
-            writeToJson(data);
-
-        
-        // add user id to json
+    }catch(err){
+        console.log("add failed");
     }
+    
 
-    if (message.content.startsWith == "$remove") {
-        let user = message.mentions.members.first().id;
-        // remove user id from json, shift all elements over.
+    try {
+
+        if (message.content.startsWith("$remove")) {
+            let userId = message.mentions.members.first().id;
+            let userName = message.mentions.members.first().displayName;
+            let userData = data.Guilds[guildname].UserData;
+    
+            if (userName in userData) {
+    
+                delete data.Guilds[guildname].UserData[userName];
+                writeToJson(data);
+                message.channel.send("<@" + userId + "> has been removed from the kicking list. :(");
+    
+            } else {
+    
+                message.channel.send("<@" + userId + "> isn't even on the kicking list!");
+    
+            }
+    
+    
+            // remove user id from json
+        }
+
+    }catch(err){
+        console.log("remove failed");
     }
 
     if (message.content == "$setchannel") {
@@ -89,7 +130,7 @@ client.on("message", async message => {
     }
 });
 
-function writeToJson(data){
+function writeToJson(data) {
     fs.writeFile("./data.json", JSON.stringify(data, null, 4), function (err) {
         if (err) throw err;
     });
@@ -105,4 +146,4 @@ if(message.content == "later chris" && message.author.bot) {
             chris.voice.kick();
 
         }
-    */ 
+    */
