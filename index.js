@@ -36,10 +36,7 @@ client.on("guildCreate", function (guild) {
         }
     
         data.Guilds.push(newJson);
-        fs.writeFile("./data.json", JSON.stringify(data, null, 4), function (err) {
-            if (err) throw err;
-            console.log('Saved!');
-        });
+        writeToJson(data);
 
     //create webhook
     //send webhook to server general chat
