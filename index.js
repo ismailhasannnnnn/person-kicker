@@ -210,9 +210,6 @@ client.on("message", async message => {
     } catch (err) {
         console.log("$dc failed");
     }
-
-
-
 });
 
 
