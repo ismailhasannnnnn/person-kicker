@@ -3,7 +3,6 @@ const config = require('./config.json');
 const data = require('./data.json');
 const fs = require('fs'); //allows reading and writing to json file
 const client = new Discord.Client();
-const webhookClient = new Discord.WebhookClient(config.webhook_id, config.webhook_token);
 
 client.once('ready', () => {
     console.log('ready');
@@ -162,7 +161,7 @@ client.on("message", async message => {
         let webhook = await message.fetchWebhook(message.webhookID);
         serverData['webhookToken'] = webhook.token;
         serverData['webhookId'] = webhook.id;
-        serverData['webhookURL'] = webhook.url
+        serverData['webhookURL'] = webhook.url;
         writeToJson(data);
     }
 
