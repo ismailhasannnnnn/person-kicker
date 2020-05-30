@@ -125,7 +125,7 @@ client.on("message", async message => {
         }
 
     } catch (err) {
-        console.log("add failed");
+        console.log("$dc failed");
     }
 
 
@@ -162,10 +162,55 @@ client.on("message", async message => {
         let webhook = await message.fetchWebhook(message.webhookID);
         serverData['webhookToken'] = webhook.token;
         serverData['webhookId'] = webhook.id;
+        serverData['webhookURL'] = webhook.url
         writeToJson(data);
     }
 
+
+    //shortcut command backup plan
+    if (message.content == "$shortcut") {
+        let serverData = data.Guilds[guildname].ServerData;
+        message.channel.send('To use the $dc command with siri, follow the instructions below: \n' 
+        + '1. If you know someone who has this shortcut already, ask them to send it to you, and do step 3. If not, go the shortcuts app and make a new shortcut. \n' 
+        + '2. Press "Add Action" => "Web" => "Url" \n'
+        + '3. Paste the webhook link below into the "URL" textbox: \n '
+        +  serverData['webhookURL'] + '\n'  
+        + '4. Press the "+" button => "Web" => "Get Contents of URL" \n'
+        + '5. Press "Show More," then select "Method" => "POST" \n'
+        + '6. Make sure the Request Body is "JSON" \n'
+        + '7. Press "Add new field" => "Text." In the key box type in "content," and in the text box type in cya later <@"  ');
+    }
+
+    //dc function 
+    try {
+
+        if (message.content.includes('Cya later') && message.author.bot) {
+            let userId = message.mentions.members.first().id;
+            let userName = message.mentions.members.first().displayName;
+            let userData = data.Guilds[guildname].UserData;
+            if (userName in userData) {
+
+                message.channel.send("<@" + userId + ">! has been successfully disconnected");
+                var member = message.mentions.members.first();
+                member.voice.kick();
+
+            } else {
+
+                message.channel.send("<@" + userId + "> is not on the hit list!");
+
+            }
+
+            // add user id to json
+        }
+
+    } catch (err) {
+        console.log("$dc failed");
+    }
+
+
+
 });
+
 
 //writes to data.json 
 function writeToJson(data) {
@@ -176,6 +221,61 @@ function writeToJson(data) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+let serverData = data.Guilds[guildname].ServerData;
+const {
+    buildShortcut,
+} = require('@joshfarrant/shortcuts-js');
+
+const {
+    URL,
+    getContentsOfURL,
+} = require('@joshfarrant/shortcuts-js/actions');
+
+
+const actions = [
+    URL({
+        url: serverData['webhookURL']
+    }),
+    getContentsOfURL({
+        method: 'POST',
+        requestBodyType: 'JSON',
+        requestBody: {
+            myObj: { 
+                Content: 'cya loser',
+            },
+        }
+    })
+    
+]
+
+// Generate the Shortcut data
+const shortcut = buildShortcut(actions);
+
+
+// Write the Shortcut to a file in the current directory
+fs.writeFile('kickSomeone.shortcut', shortcut, (err) => {
+if (err) {
+    console.error('Something went wrong :(', err);
+    return;
+}
+console.log('Shortcut created!');
+});
+
+
+*/
 
 /*
 original dc code
