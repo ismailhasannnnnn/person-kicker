@@ -170,21 +170,25 @@ client.on("message", async message => {
     //shortcut command backup plan
     if (message.content == "$shortcut") {
         let serverData = data.Guilds[guildname].ServerData;
-        message.channel.send('To use the $dc command with siri, follow the instructions below: \n' 
-        + '1. If you know someone who has this shortcut already, ask them to send it to you, and do step 3. If not, go the shortcuts app and make a new shortcut. \n' 
-        + '2. Press "Add Action" => "Web" => "Url" \n'
-        + '3. Paste the webhook link below into the "URL" textbox: \n '
-        +  serverData['webhookURL'] + '\n'  
-        + '4. Press the "+" button => "Web" => "Get Contents of URL" \n'
-        + '5. Press "Show More," then select "Method" => "POST" \n'
-        + '6. Make sure the Request Body is "JSON" \n'
-        + '7. Press "Add new field" => "Text." In the key box type in "content," and in the text box type in cya later <@"  ');
+        message.author.send('To use the $dc command with siri, follow the instructions below: \n' 
+        + '1. If you know someone who has this shortcut already, ask them to send it to you, and do step _. If not, go the shortcuts app and make a new shortcut. \n' 
+        + '2. Press "Add Action" => "Scripting" => "Choose from Menu" \n'
+        + '3. List every user you want to able to disconnect in the textboxes. Keep in mind, you will have to add the commands for every user you make, so try not to add too many. \n ' 
+        + 'The following steps will be the same for every user: \n'
+        + '4. Press the "+" button, then go to "web" => "URL" \n'
+        + '5. Paste the following link into the URL textbox: \n'
+        +  serverData['webhookURL'] + '\n' 
+        + '6. Press the "+" button, then go to "web" => "Get Contents of URL"'
+        + '7. Press "Method" and select "POST" and make sure the Request Body is JSON'
+        + '8. Press "Add new field," select "Text," in the "Key" box type in "content," and in the "text" box type in "cya later <@ [USER ID HERE] >!"' 
+        + '9. Thats it! Just make sure those 2 commands are underneath each name with their proper user IDs'
+        );
     }
 
     //dc function 
     try {
 
-        if (message.content.includes('Cya later') && message.author.bot) {
+        if (message.content.includes('cya later') && message.author.bot) {
             let userId = message.mentions.members.first().id;
             let userName = message.mentions.members.first().displayName;
             let userData = data.Guilds[guildname].UserData;
