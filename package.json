@@ -9,6 +9,7 @@
   "author": "Bismail and Mykel",
   "license": "ISC",
   "dependencies": {
+    "@replit/database": "^2.0.1",
     "discord.js": "^12.2.0"
   }
 }
