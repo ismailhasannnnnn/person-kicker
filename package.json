@@ -9,6 +9,7 @@
   "author": "Bismail and Mykel",
   "license": "ISC",
   "dependencies": {
+    "@joshfarrant/shortcuts-js": "^0.6.0",
     "@replit/database": "^2.0.1",
     "discord.js": "^12.2.0"
   }

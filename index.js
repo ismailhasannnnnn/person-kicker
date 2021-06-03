@@ -6,6 +6,17 @@ const client = new Discord.Client();
 const Database = require("@replit/database");
 const db = new Database();
 
+const {
+  actionOutput,
+  buildShortcut,
+  withVariables,
+} = require('@joshfarrant/shortcuts-js');
+
+const {
+  URL,
+  getContentsOfURL
+} = require('@joshfarrant/shortcuts-js/actions');
+
 
 
 client.once('ready', async () => {
@@ -181,21 +192,33 @@ client.on("message", async message => {
 
 
   //shortcut command backup plan
-  if (message.content == "$shortcut") {
+  if (message.content.startsWith("$shortcut")) {
     let serverData = data.Guilds[guildname].ServerData;
-    message.author.send('To use the $dc command with siri, follow the instructions below: \n'
-      + '1. If you know someone who has this shortcut already, ask them to send it to you, and do step _. If not, go the shortcuts app and make a new shortcut. \n'
-      + '2. Press "Add Action" => "Scripting" => "Choose from Menu" \n'
-      + '3. List every user you want to able to disconnect in the textboxes. Keep in mind, you will have to add the commands for every user you make, so try not to add too many. \n '
-      + 'The following steps will be the same for every user: \n'
-      + '4. Press the "+" button, then go to "web" => "URL" \n'
-      + '5. Paste the following link into the URL textbox: \n'
-      + serverData['webhookURL'] + '\n'
-      + '6. Press the "+" button, then go to "web" => "Get Contents of URL"'
-      + '7. Press "Method" and select "POST" and make sure the Request Body is JSON'
-      + '8. Press "Add new field," select "Text," in the "Key" box type in "content," and in the "text" box type in "cya later <@ [USER ID HERE] >!"'
-      + '9. Thats it! Just make sure those 2 commands are underneath each name with their proper user IDs'
-    );
+    let userId = message.mentions.members.first().id;
+    let webhookUrl = serverData.webhookURL;
+    // message.author.send('To use the $dc command with siri, follow the instructions below: \n'
+    //   + '1. If you know someone who has this shortcut already, ask them to send it to you, and do step _. If not, go the shortcuts app and make a new shortcut. \n'
+    //   + '2. Press "Add Action" => "Scripting" => "Choose from Menu" \n'
+    //   + '3. List every user you want to able to disconnect in the textboxes. Keep in mind, you will have to add the commands for every user you make, so try not to add too many. \n '
+    //   + 'The following steps will be the same for every user: \n'
+    //   + '4. Press the "+" button, then go to "web" => "URL" \n'
+    //   + '5. Paste the following link into the URL textbox: \n'
+    //   + serverData['webhookURL'] + '\n'
+    //   + '6. Press the "+" button, then go to "web" => "Get Contents of URL"'
+    //   + '7. Press "Method" and select "POST" and make sure the Request Body is JSON'
+    //   + '8. Press "Add new field," select "Text," in the "Key" box type in "content," and in the "text" box type in "cya later <@ [USER ID HERE] >!"'
+    //   + '9. Thats it! Just make sure those 2 commands are underneath each name with their proper user IDs'
+    // );
+
+    makeShortcut(webhookUrl, userId);
+    message.author.send("In order to use Captain Hook to his fullest potential, you need an iOS shortcut! \n"
+    + "1. Click this link, and then click 'Get Shortcut:' https://www.icloud.com/shortcuts/f30d01c66d4b4d4f890f445c0ba02db1 \n"
+    + "2. From there, download the shortcut you generated below, and save it to 'Documents' under the iCloud Drive. \n"
+    + "3. Now, run the 'Convert .shortcut to iCloud Link' shortcut, and select the shortcut you generated! \n"
+    + "4. Once again, add the shortcut to your shortcuts, and rename it to 'kick {person's name goes here}'. \n"
+    + "5. You're done! Enjoy kicking people when they make stupid jokes.");
+    message.author.send("Here is the shortcut you generated!", { files: ["./yourShortcut.shortcut"] });
+
   }
 
   if (message.content == "$testdb") {
@@ -244,5 +267,31 @@ async function getJsonData() {
 
 async function setJsonData(data) {
   db.set("jsonData", data)
-  
+
+}
+
+function makeShortcut(webhookUrl, personID) {
+  const actions = [
+    URL({
+      url: webhookUrl,
+    }),
+    getContentsOfURL({
+      headers: {},
+      method: 'POST',
+      requestBodyType: 'JSON',
+      requestBody: {
+        content: 'cya later <@' + personID + '>!',
+      },
+    }),
+  ];
+
+  const shortcut = buildShortcut(actions);
+
+  fs.writeFile('yourShortcut.shortcut', shortcut, (err) => {
+    if (err) {
+      console.log("something happened", err);
+      return;
+    }
+    console.log("done");
+  })
 }
