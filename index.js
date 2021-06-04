@@ -38,8 +38,7 @@ client.on("guildCreate", async function(guild) {
   let newJson = {
     "ServerData": {
       "serverId": guild.id
-    },
-    "UserData": {}
+    }
   }
 
   data.Guilds[guildName] = newJson;
@@ -56,101 +55,6 @@ client.login(config.bot_token);
 client.on("message", async message => {
 
   let guildname = message.guild.name.replace(/\s+/g, '');
-
-
-
-  //add command 
-  try {
-
-    if (message.content.startsWith('$add')) {
-      let userId = message.mentions.members.first().id;
-      let userName = message.mentions.members.first().displayName;
-      let userData = data.Guilds[guildname].UserData;
-
-      if (userName in userData) {
-
-        message.channel.send("<@" + userId + "> is already in the hit list!");
-
-      } else {
-
-        data.Guilds[guildname].UserData[userName] = userId;
-        writeToJson(data);
-        setJsonData(await data);
-
-        message.channel.send("<@" + userId + "> has successfully been added to the hit list!");
-
-      }
-
-      // add user id to json
-    }
-
-  } catch (err) {
-    console.log("add failed");
-    console.log(err);
-  }
-
-
-
-  //remove command
-  try {
-
-    if (message.content.startsWith("$remove")) {
-      let userId = message.mentions.members.first().id;
-      let userName = message.mentions.members.first().displayName;
-      let userData = data.Guilds[guildname].UserData;
-
-      if (userName in userData) {
-
-        delete data.Guilds[guildname].UserData[userName];
-        writeToJson(data);
-        setJsonData(await data);
-        message.channel.send("<@" + userId + "> has been removed from the hit list. :(");
-
-      } else {
-
-        message.channel.send("<@" + userId + "> isn't even on the hit list!");
-
-      }
-
-
-      // remove user id from json
-    }
-
-  } catch (err) {
-    console.log("remove failed");
-    console.log(err)
-  }
-
-
-
-  //dc command
-  try {
-
-    if (message.content.startsWith('$dc')) {
-      let userId = message.mentions.members.first().id;
-      let userName = message.mentions.members.first().displayName;
-      let userData = data.Guilds[guildname].UserData;
-
-      if (userName in userData) {
-
-        message.channel.send("cya later <@" + userId + ">!");
-        var member = message.mentions.members.first();
-        member.voice.kick();
-
-      } else {
-
-        message.channel.send("<@" + userId + "> is not on the hit list!");
-
-      }
-
-      // add user id to json
-    }
-
-  } catch (err) {
-    console.log("$dc failed");
-  }
-
-
 
   //setchannel command
   if (message.content == "$setchannel") {
@@ -221,42 +125,16 @@ client.on("message", async message => {
       let userId = message.mentions.members.first().id;
       let userName = message.mentions.members.first().displayName;
       let userData = data.Guilds[guildname].UserData;
-      //if (userName in userData) {
 
-        // message.channel.send("<@" + userId + ">! has been successfully disconnected");
-        var member = message.mentions.members.first();
-        member.voice.kick();
+      var member = message.mentions.members.first();
+      member.voice.kick();
 
-      //} else {
-
-        // message.channel.send("<@" + userId + "> is not on the hit list!");
-
-      //}
-
-      // add user id to json
     }
 
   } catch (err) {
     console.log("$dc failed");
   }
 });
-
-client.on("guildMemberUpdate", (oldMember, newMember) => {
-  console.log("im in here");
-  let guildname = oldMember.guild.name.replace(/\s+/g, '');
-  let userData = data.Guilds[guildname].UserData;
-
-  let oldNick = oldMember.displayName;
-  let newNick = newMember.displayName;
-
-  data.Guilds[guildname].UserData[newNick] = data.Guilds[guildname].UserData[oldNick];
-  delete data.Guilds[guildname].UserData[oldNick];
-
-  writeToJson(data);
-  setJsonData(data);
-  
-});
-
 
 //writes to data.json 
 function writeToJson(data) {
