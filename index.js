@@ -115,6 +115,7 @@ client.on("message", async message => {
     await message.author.send("Here is the shortcut you generated!", { files: [path] });
 
     deleteShortcut(path);
+    console.clear();
 
   }
 
