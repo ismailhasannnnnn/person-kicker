@@ -100,16 +100,19 @@ client.on("message", async message => {
   if (message.content.startsWith("$shortcut")) {
     let serverData = data.Guilds[guildname].ServerData;
     let userId = message.mentions.members.first().id;
+    let userName = message.mentions.members.first().displayName;
     let webhookUrl = serverData.webhookURL;
+    let shortcutName = userName + '.shortcut';
+    let path = "./" + shortcutName;
 
-    makeShortcut(webhookUrl, userId);
+    makeShortcut(webhookUrl, userId, userName);
     message.author.send("In order to use Captain Hook to his fullest potential, you need an iOS shortcut! \n"
     + "1. Click this link, and then click 'Get Shortcut:' https://www.icloud.com/shortcuts/f30d01c66d4b4d4f890f445c0ba02db1 \n"
     + "2. From there, download the shortcut you generated below, and save it to 'Documents' under the iCloud Drive. \n"
     + "3. Now, run the 'Convert .shortcut to iCloud Link' shortcut, and select the shortcut you generated! \n"
     + "4. Once again, add the shortcut to your shortcuts, and rename it to 'kick {person's name goes here}'. \n"
     + "5. You're done! Enjoy kicking people when they make stupid jokes.");
-    message.author.send("Here is the shortcut you generated!", { files: ["./yourShortcut.shortcut"] });
+    message.author.send("Here is the shortcut you generated!", { files: [path] });
 
   }
 
@@ -152,7 +155,7 @@ async function setJsonData(data) {
 
 }
 
-function makeShortcut(webhookUrl, personID) {
+function makeShortcut(webhookUrl, personID, userName) {
   const actions = [
     URL({
       url: webhookUrl,
@@ -169,7 +172,10 @@ function makeShortcut(webhookUrl, personID) {
 
   const shortcut = buildShortcut(actions);
 
-  fs.writeFile('yourShortcut.shortcut', shortcut, (err) => {
+  let shortcutName = userName + '.shortcut';
+  console.log(shortcutName);
+
+  fs.writeFile(shortcutName, shortcut, (err) => {
     if (err) {
       console.log("something happened", err);
       return;
