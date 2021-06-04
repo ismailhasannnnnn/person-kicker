@@ -51,6 +51,7 @@ client.on("guildCreate", async function(guild) {
 
 client.login(config.bot_token);
 
+
 //command list - (start with $)
 client.on("message", async message => {
 
@@ -196,19 +197,6 @@ client.on("message", async message => {
     let serverData = data.Guilds[guildname].ServerData;
     let userId = message.mentions.members.first().id;
     let webhookUrl = serverData.webhookURL;
-    // message.author.send('To use the $dc command with siri, follow the instructions below: \n'
-    //   + '1. If you know someone who has this shortcut already, ask them to send it to you, and do step _. If not, go the shortcuts app and make a new shortcut. \n'
-    //   + '2. Press "Add Action" => "Scripting" => "Choose from Menu" \n'
-    //   + '3. List every user you want to able to disconnect in the textboxes. Keep in mind, you will have to add the commands for every user you make, so try not to add too many. \n '
-    //   + 'The following steps will be the same for every user: \n'
-    //   + '4. Press the "+" button, then go to "web" => "URL" \n'
-    //   + '5. Paste the following link into the URL textbox: \n'
-    //   + serverData['webhookURL'] + '\n'
-    //   + '6. Press the "+" button, then go to "web" => "Get Contents of URL"'
-    //   + '7. Press "Method" and select "POST" and make sure the Request Body is JSON'
-    //   + '8. Press "Add new field," select "Text," in the "Key" box type in "content," and in the "text" box type in "cya later <@ [USER ID HERE] >!"'
-    //   + '9. Thats it! Just make sure those 2 commands are underneath each name with their proper user IDs'
-    // );
 
     makeShortcut(webhookUrl, userId);
     message.author.send("In order to use Captain Hook to his fullest potential, you need an iOS shortcut! \n"
@@ -233,17 +221,17 @@ client.on("message", async message => {
       let userId = message.mentions.members.first().id;
       let userName = message.mentions.members.first().displayName;
       let userData = data.Guilds[guildname].UserData;
-      if (userName in userData) {
+      //if (userName in userData) {
 
-        message.channel.send("<@" + userId + ">! has been successfully disconnected");
+        // message.channel.send("<@" + userId + ">! has been successfully disconnected");
         var member = message.mentions.members.first();
         member.voice.kick();
 
-      } else {
+      //} else {
 
-        message.channel.send("<@" + userId + "> is not on the hit list!");
+        // message.channel.send("<@" + userId + "> is not on the hit list!");
 
-      }
+      //}
 
       // add user id to json
     }
@@ -251,6 +239,22 @@ client.on("message", async message => {
   } catch (err) {
     console.log("$dc failed");
   }
+});
+
+client.on("guildMemberUpdate", (oldMember, newMember) => {
+  console.log("im in here");
+  let guildname = oldMember.guild.name.replace(/\s+/g, '');
+  let userData = data.Guilds[guildname].UserData;
+
+  let oldNick = oldMember.displayName;
+  let newNick = newMember.displayName;
+
+  data.Guilds[guildname].UserData[newNick] = data.Guilds[guildname].UserData[oldNick];
+  delete data.Guilds[guildname].UserData[oldNick];
+
+  writeToJson(data);
+  setJsonData(data);
+  
 });
 
 
