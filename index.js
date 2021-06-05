@@ -97,32 +97,35 @@ client.on("message", async message => {
 
 
   //shortcut command backup plan
-  if (message.content.startsWith("$shortcut")) {
+  if (message.content.startsWith("$shortcut") && message.content.includes('@')) {
     let serverData = data.Guilds[guildname].ServerData;
     let userId = message.mentions.members.first().id;
     let userName = message.mentions.members.first().displayName;
     let webhookUrl = serverData.webhookURL;
-    let shortcutName = userName + '.shortcut';
-    let path = "./" + shortcutName;
+    let shortcutMuteName = userName + '_Mute.shortcut';
+    let shortcutDcName = userName + '_Dc.shortcut';
+    let dcPath = "./" + shortcutDcName;
+    let mutePath = "./" + shortcutMuteName;
 
-    makeShortcut(webhookUrl, userId, userName);
+    makeMuteShortcut(webhookUrl, userId, userName);
+    makeDcShortcut(webhookUrl, userId, userName);
     await message.author.send("In order to use Captain Hook to his fullest potential, you need an iOS shortcut! \n"
     + "1. Click this link, and then click 'Get Shortcut:' https://www.icloud.com/shortcuts/f30d01c66d4b4d4f890f445c0ba02db1 \n"
     + "2. From there, download the shortcut you generated below, and save it to 'Documents' under the iCloud Drive. \n"
     + "3. Now, run the 'Convert .shortcut to iCloud Link' shortcut, and select the shortcut you generated! \n"
     + "4. Once again, add the shortcut to your shortcuts, and rename it to 'kick {person's name goes here}'. \n"
     + "5. You're done! Enjoy kicking people when they make stupid jokes.");
-    await message.author.send("Here is the shortcut you generated!", { files: [path] });
+    await message.author.send("Here are the shortcut you generated!", { files: [dcPath, mutePath] });
 
-    deleteShortcut(path);
+    deleteShortcut(dcPath);
+    deleteShortcut(mutePath);
     console.clear();
 
   }
 
-  if (message.content == "$testdb") {
-    console.log(await getJsonData());
-  }
+  if (message.content.startsWith('$shortcut music')) {
 
+  }
 
   //dc function 
   try {
@@ -140,7 +143,23 @@ client.on("message", async message => {
   } catch (err) {
     console.log("$dc failed");
   }
+
+  try {
+    if(message.content.includes('shut up') && message.author.bot) {
+      let userId = message.mentions.members.first().id;
+      let userName = message.mentions.members.first().displayName;
+      let userData = data.Guilds[guildname].UserData;
+
+      var member = message.mentions.members.first();
+      member.voice.setMute(true);
+    }
+  } catch (err) {
+    console.log('mute failed');
+  }
+
 });
+
+
 
 //writes to data.json 
 function writeToJson(data) {
@@ -158,7 +177,7 @@ async function setJsonData(data) {
 
 }
 
-function makeShortcut(webhookUrl, personID, userName) {
+function makeDcShortcut(webhookUrl, personID, userName) {
   const actions = [
     URL({
       url: webhookUrl,
@@ -175,7 +194,36 @@ function makeShortcut(webhookUrl, personID, userName) {
 
   const shortcut = buildShortcut(actions);
 
-  let shortcutName = userName + '.shortcut';
+  let shortcutName = userName + '_Dc.shortcut';
+  console.log(shortcutName);
+
+  fs.writeFile(shortcutName, shortcut, (err) => {
+    if (err) {
+      console.log("something happened", err);
+      return;
+    }
+    console.log("done");
+  })
+}
+
+function makeMuteShortcut(webhookUrl, personID, userName) {
+  const actions = [
+    URL({
+      url: webhookUrl,
+    }),
+    getContentsOfURL({
+      headers: {},
+      method: 'POST',
+      requestBodyType: 'JSON',
+      requestBody: {
+        content: 'shut up <@' + personID + '>!',
+      },
+    }),
+  ];
+
+  const shortcut = buildShortcut(actions);
+
+  let shortcutName = userName + '_Mute.shortcut';
   console.log(shortcutName);
 
   fs.writeFile(shortcutName, shortcut, (err) => {
