@@ -1,10 +1,11 @@
 const Discord = require("discord.js");
-const config = require("./config.json");
 let data = require("./data.json");
 const fs = require("fs"); //allows reading and writing to json file
 const client = new Discord.Client();
 const Database = require("@replit/database");
 const db = new Database();
+const bot_token = process.env['bot_token']
+
 
 /**
  * ! IMPORT OF SHORTCUTS.JS LIBRARY
@@ -45,7 +46,7 @@ client.on("guildCreate", async function (guild) {
   setJsonData(await data);
 });
 
-client.login(config.bot_token);
+client.login(bot_token);
 
 /**
  * ! BEGINNING OF COMMAND LIST
