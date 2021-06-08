@@ -115,6 +115,7 @@ client.on("message", async (message) => {
     message.content.includes("@")
   ) {
     let serverData = data.Guilds[guildname].ServerData;
+    let userId = message.mentions.members.first().id;
     let userName = message.mentions.members.first().displayName;
     let webhookUrl = serverData.webhookURL;
     let shortcutMuteName = userName + "_Mute.shortcut";
@@ -129,6 +130,7 @@ client.on("message", async (message) => {
       .setColor("#F7D10F")
       .setTitle("iOS Shortcuts")
       .setAuthor('Ziploc & Dogbert')
+      .setThumbnail('https://cdn.discordapp.com/avatars/712788362938810378/a17a3986232da9b3024f4af9bd77e4f4.webp?size=128')
       .setDescription('In order to use Captain Hook to his fullest potential, you need an iOS shortcut!')
       .addFields(
         {name: "Step 1", value: "Click this link, and then click 'Get Shortcut:' https://www.icloud.com/shortcuts/f30d01c66d4b4d4f890f445c0ba02db1"},
@@ -143,6 +145,8 @@ client.on("message", async (message) => {
 
     deleteShortcut(dcPath);
     deleteShortcut(mutePath);
+
+    message.delete();
     console.clear();
   }
 
