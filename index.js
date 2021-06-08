@@ -115,7 +115,6 @@ client.on("message", async (message) => {
     message.content.includes("@")
   ) {
     let serverData = data.Guilds[guildname].ServerData;
-    let userId = message.mentions.members.first().id;
     let userName = message.mentions.members.first().displayName;
     let webhookUrl = serverData.webhookURL;
     let shortcutMuteName = userName + "_Mute.shortcut";
@@ -133,24 +132,14 @@ client.on("message", async (message) => {
       .setDescription('In order to use Captain Hook to his fullest potential, you need an iOS shortcut!')
       .addFields(
         {name: "Step 1", value: "Click this link, and then click 'Get Shortcut:' https://www.icloud.com/shortcuts/f30d01c66d4b4d4f890f445c0ba02db1"},
-        {name: "Step 2", value: "From there, download the shortcut you generated below, and save it to 'Documents' under the iCloud Drive."},
-        {name: "Step 3", value: "Now, run the 'Convert .shortcut to iCloud Link' shortcut, and select the shortcut you generated!"},
+        {name: "Step 2", value: "From there, download the shortcuts ("+ shortcutDcName + " and " + shortcutMuteName +") you generated above, click 'More,' 'Save to Files,' and save it to 'Documents' under the iCloud Drive."},
+        {name: "Step 3", value: "Now, run the 'Convert .shortcut to iCloud Link' shortcut (you got this from the iCloud link in step 1), and select the shortcut you just saved to the iCloud Documents!"},
         {name: "Step 4", value: "Once again, add the shortcut to your shortcuts, and rename it to 'kick {person's name goes here}'."},
         {name: "Step 5", value: "You're done! Enjoy kicking people when they make stupid jokes."}
       )
       .attachFiles([dcPath, mutePath])
 
-    // await message.author.send(
-    //   "In order to use Captain Hook to his fullest potential, you need an iOS shortcut! \n" +
-    //   "1. Click this link, and then click 'Get Shortcut:' https://www.icloud.com/shortcuts/f30d01c66d4b4d4f890f445c0ba02db1 \n" +
-    //   "2. From there, download the shortcut you generated below, and save it to 'Documents' under the iCloud Drive. \n" +
-    //   "3. Now, run the 'Convert .shortcut to iCloud Link' shortcut, and select the shortcut you generated! \n" +
-    //   "4. Once again, add the shortcut to your shortcuts, and rename it to 'kick {person's name goes here}'. \n" +
-    //   "5. You're done! Enjoy kicking people when they make stupid jokes."
-    // );
-    // await message.author.send("Here are the shortcut you generated!", {
-    //   files: [dcPath, mutePath],
-    // });
+    await message.author.send(dmEmbed);
 
     deleteShortcut(dcPath);
     deleteShortcut(mutePath);
